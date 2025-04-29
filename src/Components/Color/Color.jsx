@@ -1,5 +1,10 @@
 import "./Color.css";
+import { useEffect } from "react";
+
 export default function Color({ color }) {
+  useEffect(() => {
+    console.log("Find Issue 1");
+  }, []);
   return (
     <div
       className="color-card"
