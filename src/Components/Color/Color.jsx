@@ -1,5 +1,6 @@
 import "./Color.css";
 import { useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Color({ color }) {
   useEffect(() => {
