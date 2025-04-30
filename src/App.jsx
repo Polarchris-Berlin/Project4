@@ -13,8 +13,10 @@ import "./App.css";
 
 function App() {
   // State-Hook: 'colors' hält die Liste aller Farb-Objekte
+  // State-HooK confirmDeletedId enthält ID der Farbkarte, die gelöscht wird
   // initial befüllt mit 'initialColors' aus der Lib
   const [colors, setColors] = useState(initialColors);
+  const [confirmDeletedId, setConfirmDeleteId] = useState(null);
 
   /**
    * handleNewColor
@@ -25,6 +27,21 @@ function App() {
   function handleNewColor({ role, hex, contrastText }) {
     const newColor = { id: uuid(), role, hex, contrastText };
     setColors([newColor, ...colors]);
+
+    //speichert ID der zu löschenden Farbkarte
+    function requestDeleteColor(id) {
+      setConfirmDeleteId(id);
+    }
+    //Entfernt die Karte mit der ID aus requestedDeleteColorID
+    //Setzt die setCondirmDeleteId zurück auf null.
+    function handleDeleteColor(id) {
+      setColors(colors.filter((c) => c.id !== id));
+      setConfirmDeleteId(null);
+    }
+    // Setzt die ConfirmDeletedID zurück auf null ohne zu löschen
+    function cancelDelete() {
+      setConfirmDeleteId(null);
+    }
   }
 
   // Rendern der UI
