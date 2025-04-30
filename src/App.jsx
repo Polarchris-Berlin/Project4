@@ -16,7 +16,8 @@ function App() {
   // State-HooK confirmDeletedId enthält ID der Farbkarte, die gelöscht wird
   // initial befüllt mit 'initialColors' aus der Lib
   const [colors, setColors] = useState(initialColors);
-  const [confirmDeletedId, setConfirmDeleteId] = useState(null);
+  // ID der Farbkarte, für die wir gerade eine Lösch-Bestätigung anzeigen
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
   /**
    * handleNewColor
@@ -27,21 +28,21 @@ function App() {
   function handleNewColor({ role, hex, contrastText }) {
     const newColor = { id: uuid(), role, hex, contrastText };
     setColors([newColor, ...colors]);
+  }
 
-    //speichert ID der zu löschenden Farbkarte
-    function requestDeleteColor(id) {
-      setConfirmDeleteId(id);
-    }
-    //Entfernt die Karte mit der ID aus requestedDeleteColorID
-    //Setzt die setCondirmDeleteId zurück auf null.
-    function handleDeleteColor(id) {
-      setColors(colors.filter((c) => c.id !== id));
-      setConfirmDeleteId(null);
-    }
-    // Setzt die ConfirmDeletedID zurück auf null ohne zu löschen
-    function cancelDelete() {
-      setConfirmDeleteId(null);
-    }
+  //speichert ID der zu löschenden Farbkarte
+  function requestDeleteColor(id) {
+    setConfirmDeleteId(id);
+  }
+  //Entfernt die Karte mit der ID aus requestedDeleteColorID
+  //Setzt die setCondirmDeleteId zurück auf null.
+  function handleDeleteColor(id) {
+    setColors(colors.filter((c) => c.id !== id));
+    setConfirmDeleteId(null);
+  }
+  // Setzt die ConfirmDeletedID zurück auf null ohne zu löschen
+  function cancelDelete() {
+    setConfirmDeleteId(null);
   }
 
   // Rendern der UI
@@ -56,8 +57,22 @@ function App() {
       {/* Alle bestehenden Farben als Color-Komponenten mappen */}
       {colors.map((c) => (
         // Jeder Eintrag braucht einen eindeutigen key fürs Re-Rendering
-        <Color key={c.id} color={c} />
+        // Implementierung der Lösch-Funktion und ihrer Arbeitsschritte
+        <Color
+          key={c.id}
+          color={c}
+          onRequestDelete={() => requestDeleteColor(c.id)}
+          onConfirmDelete={() => handleDeleteColor(c.id)}
+          onCancelDelete={cancelDelete}
+          showConfirm={confirmDeleteId === c.id}
+        />
       ))}
+      {colors.length === 0 && (
+        <p className="empty-message">
+          Hier kannst ein neues Theme kreieren. Füge neue Farben hinzu. Es ist
+          ganz einfach!
+        </p>
+      )}
     </>
   );
 }
