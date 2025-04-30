@@ -1,0 +1,28 @@
+.color-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.color-form .form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.color-form .form-group input[type="text"] {
+  width: 200px;
+  padding: 0.3rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+}
+
+.color-form .form-group input[type="color"] {
+  width: 2rem;
+  height: 2rem;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+  border: none;
+  padding: 0;
+}
+
+.color-form .submit-btn {
+  margin-top: 1rem;
+}

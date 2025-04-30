@@ -8,8 +8,6 @@ import "./App.css";
 function App() {
   // Liste aller Farben
   const [colors, setColors] = useState(initialColors);
-  // ID der Farbkarte, für die wir gerade eine Lösch-Bestätigung anzeigen
-  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
   // Fügt eine neu erstellte Farbe ins Array ein
   function handleNewColor({ role, hex, contrastText }) {
@@ -17,20 +15,24 @@ function App() {
     setColors([newColor, ...colors]);
   }
 
-  // Startet die Lösch-Bestätigung für eine Karte
-  function requestDeleteColor(id) {
-    setConfirmDeleteId(id);
-  }
-
   // Löscht die Farbe aus dem State und räumt die Bestätigung weg
   function handleDeleteColor(id) {
     setColors(colors.filter((c) => c.id !== id));
-    setConfirmDeleteId(null);
   }
 
-  // Bricht die Löschung ab und entfernt die Bestätigung
-  function cancelDelete() {
-    setConfirmDeleteId(null);
+  function handleEditColor(id, updatedColor) {
+    setColors(
+      colors.map((c) =>
+        c.id === id
+          ? {
+              ...c,
+              role: updatedColor.role,
+              hex: updatedColor.hex,
+              contrastText: updatedColor.contrastText,
+            }
+          : c
+      )
+    );
   }
 
   return (
@@ -46,10 +48,8 @@ function App() {
           <Color
             key={c.id}
             color={c}
-            onRequestDelete={() => requestDeleteColor(c.id)}
             onConfirmDelete={() => handleDeleteColor(c.id)}
-            onCancelDelete={cancelDelete}
-            showConfirm={confirmDeleteId === c.id}
+            onEditColor={(updatedData) => handleEditColor(c.id, updatedData)}
           />
         ))}
 
