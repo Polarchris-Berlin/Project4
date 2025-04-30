@@ -1,81 +1,67 @@
-// React-Hook import für lokalen State
 import { useState } from "react";
-// Unsere vordefinierten Farben aus der Lib
 import { initialColors } from "./lib/colors";
-// UUID-Generator für eindeutige IDs neuer Farben
 import { v4 as uuid } from "uuid";
-// Component zum Darstellen einzelner Farb-Karten
 import Color from "./Components/Color/Color";
-// Formular-Komponente, um neue Farben hinzuzufügen
 import ColorForm from "./Components/ColorForm/ColorForm";
-// Optionale globale Styles (falls du App-spezifische CSS hast)
 import "./App.css";
 
 function App() {
-  // State-Hook: 'colors' hält die Liste aller Farb-Objekte
-  // State-HooK confirmDeletedId enthält ID der Farbkarte, die gelöscht wird
-  // initial befüllt mit 'initialColors' aus der Lib
+  // Liste aller Farben
   const [colors, setColors] = useState(initialColors);
   // ID der Farbkarte, für die wir gerade eine Lösch-Bestätigung anzeigen
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
-  /**
-   * handleNewColor
-   * Wird aufgerufen, wenn ColorForm ein neues Farb-Objekt liefert.
-   * Baut ein neues Objekt mit uuid() und den Formular-Werten,
-   * und fügt es vorne in den 'colors'-State ein.
-   */
+  // Fügt eine neu erstellte Farbe ins Array ein
   function handleNewColor({ role, hex, contrastText }) {
     const newColor = { id: uuid(), role, hex, contrastText };
     setColors([newColor, ...colors]);
   }
 
-  //speichert ID der zu löschenden Farbkarte
+  // Startet die Lösch-Bestätigung für eine Karte
   function requestDeleteColor(id) {
     setConfirmDeleteId(id);
   }
-  //Entfernt die Karte mit der ID aus requestedDeleteColorID
-  //Setzt die setCondirmDeleteId zurück auf null.
+
+  // Löscht die Farbe aus dem State und räumt die Bestätigung weg
   function handleDeleteColor(id) {
     setColors(colors.filter((c) => c.id !== id));
     setConfirmDeleteId(null);
   }
-  // Setzt die ConfirmDeletedID zurück auf null ohne zu löschen
+
+  // Bricht die Löschung ab und entfernt die Bestätigung
   function cancelDelete() {
     setConfirmDeleteId(null);
   }
 
-  // Rendern der UI
   return (
-    <>
-      {/* Überschrift der App */}
+    <div className="App">
       <h1>Theme Creator</h1>
 
-      {/* Formular zum Hinzufügen einer neuen Farbe */}
-      <ColorForm onSubmitColor={handleNewColor} />
+      <div className="form-wrapper">
+        <ColorForm onSubmitColor={handleNewColor} />
+      </div>
 
-      {/* Alle bestehenden Farben als Color-Komponenten mappen */}
-      {colors.map((c) => (
-        // Jeder Eintrag braucht einen eindeutigen key fürs Re-Rendering
-        // Implementierung der Lösch-Funktion und ihrer Arbeitsschritte
-        <Color
-          key={c.id}
-          color={c}
-          onRequestDelete={() => requestDeleteColor(c.id)}
-          onConfirmDelete={() => handleDeleteColor(c.id)}
-          onCancelDelete={cancelDelete}
-          showConfirm={confirmDeleteId === c.id}
-        />
-      ))}
-      {colors.length === 0 && (
-        <p className="empty-message">
-          Hier kannst ein neues Theme kreieren. Füge neue Farben hinzu. Es ist
-          ganz einfach!
-        </p>
-      )}
-    </>
+      <div className="color-list">
+        {colors.map((c) => (
+          <Color
+            key={c.id}
+            color={c}
+            onRequestDelete={() => requestDeleteColor(c.id)}
+            onConfirmDelete={() => handleDeleteColor(c.id)}
+            onCancelDelete={cancelDelete}
+            showConfirm={confirmDeleteId === c.id}
+          />
+        ))}
+
+        {colors.length === 0 && (
+          <p className="empty-message">
+            Es sind keine Farben mehr vorhanden. Füge neue Farben hinzu, um dein
+            Theme zu gestalten!
+          </p>
+        )}
+      </div>
+    </div>
   );
 }
 
-// Default-Export der App-Komponente, damit main.jsx sie importieren kann
 export default App;
