@@ -1,14 +1,18 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./Color.css";
 import { Trash2 } from "lucide-react";
+import ColorForm from "../ColorForm/ColorForm";
 
-export default function Color({
-  color,
-  onRequestDelete,
-  onConfirmDelete,
-  onCancelDelete,
-  showConfirm,
-}) {
+export default function Color({ color, onConfirmDelete, onEditColor }) {
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  function requestDeleteColor() {
+    setIsDeleting(!isDeleting);
+  }
+
+  function cancelDelete() {
+    setIsDeleting(false);
+  }
   useEffect(() => {
     console.log("Find Issue 1");
   }, []);
@@ -21,26 +25,46 @@ export default function Color({
         color: color.contrastText,
       }}
     >
-      {/* Header mit Role und Delete-Button */}
       <div className="color-card-header">
         <h3 className="color-card-highlight">{color.role}</h3>
-        <button onClick={onRequestDelete} className="delete-btn">
-          <Trash2 className="delete-icon" />
-        </button>
+        <div className="action-buttons">
+          {/* Delete-Button */}
+          <button onClick={requestDeleteColor} className="delete-btn">
+            <Trash2 className="delete-icon" />
+          </button>
+          {/* Edit-Button */}
+          <button onClick={() => setIsEditing(!isEditing)} className="edit-btn">
+            ✏️
+          </button>
+        </div>
       </div>
 
-      {/* Confirmation-Block direkt unter dem Header */}
-      {showConfirm && (
+      {isDeleting == true && (
         <div className="delete-confirm">
           <p className="color-card-highlight">Delete this color?</p>
           <button onClick={onConfirmDelete}>Yes</button>
-          <button onClick={onCancelDelete}>No</button>
+          <button onClick={cancelDelete}>No</button>
         </div>
       )}
 
-      {/* Farbdetails */}
-      <p className="color-code">{color.hex}</p>
-      <p>contrast: {color.contrastText}</p>
+      {isEditing && (
+        <ColorForm
+          initialRole={color.role}
+          initialHex={color.hex}
+          initialContrastText={color.contrastText}
+          onSubmitColor={(updatedData) => {
+            onEditColor(updatedData);
+            setIsEditing(false);
+          }}
+        />
+      )}
+
+      {!isEditing && (
+        <>
+          <p className="color-code">{color.hex}</p>
+          <p>contrast: {color.contrastText}</p>
+        </>
+      )}
     </div>
   );
 }
