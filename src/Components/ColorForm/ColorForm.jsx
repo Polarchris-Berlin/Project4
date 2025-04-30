@@ -44,7 +44,6 @@ export default function ColorForm({
       </label>
       <br />
 
-      {/* Hex-Feld: nutzt unsere ColorInput-Komponente */}
       <label htmlFor="hex">
         Hex
         <br />
@@ -55,7 +54,6 @@ export default function ColorForm({
       </label>
       <br />
 
-      {/* Contrast Text-Feld: ebenfalls ColorInput */}
       <label htmlFor="contrastText">
         Contrast Text
         <br />
@@ -63,7 +61,6 @@ export default function ColorForm({
       </label>
       <br />
 
-      {/* Absende-Button: löst handleSubmit aus */}
       <button type="submit">ADD COLOR</button>
     </form>
   );

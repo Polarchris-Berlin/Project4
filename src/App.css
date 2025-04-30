@@ -2,3 +2,19 @@ body {
   font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   padding: 10px;
 }
+
+.empty-message {
+  text-align: center;
+  font-style: italic;
+  margin-top: 3rem;
+  color: #555;
+}
+
+.form-wrapper {
+  margin-top: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.App {
+  padding-left: 1rem;
+}
