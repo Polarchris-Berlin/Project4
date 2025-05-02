@@ -1,4 +1,4 @@
-import { useState } from "react";
+import useLocalStorageState from "use-local-storage-state";
 import { initialColors } from "./lib/colors";
 import { v4 as uuid } from "uuid";
 import Color from "./Components/Color/Color";
@@ -6,8 +6,10 @@ import ColorForm from "./Components/ColorForm/ColorForm";
 import "./App.css";
 
 function App() {
-  // Liste aller Farben
-  const [colors, setColors] = useState(initialColors);
+  // Liste aller Farben aus LocalStorage
+  const [colors, setColors] = useLocalStorageState("theme-colors", {
+    defaultValue: initialColors,
+  });
 
   // Fügt eine neu erstellte Farbe ins Array ein
   function handleNewColor({ role, hex, contrastText }) {
